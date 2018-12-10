@@ -9,10 +9,12 @@ import re
 import sys
 import os
 import json
-with open('config.json','r') as file:
+
+with open('E:\NukeTool\config.json', 'r') as file:
     filePath = json.load(file)
 
 sys.path.append(filePath["nukePath"])
+
 
 def firstWrite(nukeFileOpenPath):
     import nuke
@@ -27,6 +29,9 @@ def firstWrite(nukeFileOpenPath):
     movSavePath = rightUpRootPath + '/' + movFileName
     number = 0
     for node in nuke.allNodes():
+        if node.Class() == 'Write':
+            WriteNode = node
+            print "WriteNode:",WriteNode
         if node.Class() == 'OLMSmoother':
             if number == 0:
                 upPath = 'chAll'
@@ -75,7 +80,8 @@ def firstWrite(nukeFileOpenPath):
                 node.setInput(0, readNode)
             
             number += 1
-            lastWriteNode = nuke.toNode('Write1')
+            # lastWriteNode = nuke.toNode('Write1')
+            lastWriteNode = WriteNode
             print "movSavePath:", movSavePath
             lastWriteNode['file'].setValue(movSavePath)
             lastWriteNode['file_type'].setValue('mov')
@@ -121,5 +127,8 @@ def main():
     firstWrite(nukeFileOpenPath)
 
 main()
+
+
+
 
 
